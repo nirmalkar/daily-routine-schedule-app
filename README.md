@@ -1,6 +1,30 @@
-# Getting Started with Create React App
+# Daily Routine Schedule App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This application helps you manage your daily routines, todos, and memos. It consists of a React frontend and a Python backend.
+
+## Usage
+
+The application provides a user-friendly interface to manage your daily schedule. Here's a breakdown of the main sections:
+
+### Daily Routine
+This section allows you to view and manage your daily routines. You can add, edit, and delete routines.
+
+### To-Do
+This section allows you to manage your to-do list. You can add, edit, and delete tasks.
+
+### Memos
+This section allows you to create and manage memos. You can add, edit, and delete memos.
+
+### Date Navigation
+Use the date navigation to view your schedule for different days.
+
+## Technologies
+
+### React Frontend
+The frontend is built using React, providing a dynamic and responsive user interface. It uses components to manage the different sections of the app.
+
+### Python Backend
+The backend is built using Python, providing the necessary API endpoints for the frontend to interact with.
 
 ## Available Scripts
 
@@ -8,23 +32,23 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.\
+Runs the app in the development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
+The page will reload when you make changes.
 You may also see any lint errors in the console.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
+Launches the test runner in the interactive watch mode.
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
+Builds the app for production to the `build` folder.
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
+The build is minified and the filenames include the hashes.
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.

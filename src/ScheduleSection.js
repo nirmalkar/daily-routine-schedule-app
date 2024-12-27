@@ -171,8 +171,10 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
                 {timeboxes.map((box) => (
                     <div
                         key={box.id}
-                        className={`absolute left-2 right-2 bg-blue-100 border border-blue-300 rounded shadow-sm hover:shadow ${draggedBox === box.id ? 'cursor-grabbing' : 'cursor-grab'}`}
+                        className={`absolute bg-blue-100 border border-blue-300 rounded shadow-sm hover:shadow ${draggedBox === box.id ? 'cursor-grabbing' : 'cursor-grab'}`}
                         style={{
+                            left: '3rem',
+                            right: '1rem',
                             top: `${((box.startTime - 6) / 18) * 100}%`,
                             height: `${(box.duration / 18) * 100}%`,
                             zIndex: draggedBox === box.id || resizing?.id === box.id ? 10 : 1,
@@ -193,7 +195,7 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
                                     autoFocus
                                 />
                             ) : (
-                                <div className="w-full pl-6" onDoubleClick={() => setEditingBox(box.id)}>
+                                <div className="w-full pl-8 pr-2" onDoubleClick={() => setEditingBox(box.id)}>
                                     {box.text}
                                 </div>
                             )}
