@@ -31,7 +31,7 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
             if (newTime >= 6 && newTime <= 24) {
                 setTimeboxes(boxes => boxes.map(box => {
                     if (box.id === draggedBox) {
-                        return { ...box, startTime: newTime };
+                        return {...box, startTime: newTime };
                     }
                     return box;
                 }));
@@ -51,7 +51,7 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
                 if (box.id === resizing.id) {
                     const newDuration = Math.max(minDuration, Math.round((resizing.originalDuration + duration) * 4) / 4);
                     const maxDuration = 24 - box.startTime;
-                    return { ...box, duration: Math.min(newDuration, maxDuration) };
+                    return {...box, duration: Math.min(newDuration, maxDuration) };
                 }
                 return box;
             }));
@@ -112,29 +112,36 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
                 box.id === id ? { ...box, text: newText } : box
             )
         );
-        setSchedule(boxes =>
-            boxes.map(box =>
-                box.id === id ? { ...box, text: newText } : box
-            )
-        );
     };
 
     const deleteTimebox = (id) => {
-        setTimeboxes(boxes => boxes.filter(box => box.id !== id));
-        setSchedule(boxes => boxes.filter(box => box.id !== id));
+        setTimeboxes(boxes => boxes.filter(box => box.id!== id));
+        setSchedule(boxes => boxes.filter(box => box.id!== id));
     };
 
     useEffect(() => {
         if (schedule) {
-            setTimeboxes(JSON.parse(JSON.stringify(schedule)));
+            const prevSchedule = JSON.stringify(timeboxes);
+            const nextSchedule = JSON.stringify(schedule);
+            if (prevSchedule !== nextSchedule) {
+                setTimeboxes(JSON.parse(JSON.stringify(schedule)));
+            }
         }
     }, [schedule]);
 
     useEffect(() => {
-        if (editingBox && inputRef.current) {
-            inputRef.current.focus();
+        if (editingBox) {
+            setTimeout(() => {
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 0);
         }
     }, [editingBox]);
+
+    useEffect(() => {
+        setSchedule(timeboxes);
+    }, [timeboxes]);
 
     return (
         <div className="border rounded-lg p-4">
@@ -171,25 +178,24 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
                 {timeboxes.map((box) => (
                     <div
                         key={box.id}
-                        className={`absolute bg-blue-100 border border-blue-300 rounded shadow-sm hover:shadow ${draggedBox === box.id ? 'cursor-grabbing' : 'cursor-grab'}`}
+                        className={`absolute bg-blue-100 border border-blue-300 rounded shadow-sm hover:shadow ${draggedBox === box.id? 'cursor-grabbing' : 'cursor-grab'}`}
                         style={{
                             left: '3rem',
                             right: '1rem',
                             top: `${((box.startTime - 6) / 18) * 100}%`,
                             height: `${(box.duration / 18) * 100}%`,
-                            zIndex: draggedBox === box.id || resizing?.id === box.id ? 10 : 1,
+                            zIndex: draggedBox === box.id || resizing?.id === box.id? 10 : 1,
                             backgroundColor: 'rgba(173, 216, 230, 0.5)'
                         }}
                         onMouseDown={(e) => startDrag(e, box)}
                     >
                         <div className="p-0 flex justify-between items-center">
-                            {editingBox === box.id ? (
+                            {editingBox === box.id? (
                                 <input
                                     ref={inputRef}
                                     type="text"
                                     value={box.text}
                                     onChange={(e) => updateBoxText(box.id, e.target.value)}
-                                    onBlur={() => setEditingBox(null)}
                                     onKeyDown={(e) => e.key === 'Enter' && setEditingBox(null)}
                                     className="w-full bg-transparent border-none focus:outline-none"
                                     autoFocus
