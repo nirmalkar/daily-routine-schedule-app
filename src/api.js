@@ -1,8 +1,8 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 export const fetchDailyData = async (date) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/daily-data/${date}`);
+        const response = await fetch(`${API_BASE_URL}/api/daily-data/${date}`);
         if (!response.ok) {
             const errorText = await response.text(); // Get error message from server
             throw new Error(`Failed to fetch data: ${response.status} - ${errorText}`);
@@ -16,7 +16,7 @@ export const fetchDailyData = async (date) => {
 
 export const saveDailyData = async (date, data) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/daily-data/${date}`, {
+        const response = await fetch(`${API_BASE_URL}/api/daily-data/${date}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

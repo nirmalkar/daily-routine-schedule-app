@@ -27,6 +27,9 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
+# Create instance directory for SQLite database
+RUN mkdir -p instance && chown -R root:root instance && chmod 777 instance
+
 # Copy backend files
 COPY app.py .
 COPY instance/ ./instance/
@@ -49,9 +52,13 @@ ENV WDS_SOCKET_PORT=0
 EXPOSE 3000
 EXPOSE 5000
 
-# Create startup script
-RUN echo '#!/bin/bash\nnpm start & python app.py' > start.sh && \
-    chmod +x start.sh
+# Create startup script with proper working directory
+RUN echo '#!/bin/bash\n\
+cd /app\n\
+python app.py & \
+npm start' > /app/start.sh && \
+chmod +x /app/start.sh
 
-# Set the entrypoint to run both frontend and backend
-CMD ["./start.sh"]
+# Set the working directory and run the start script
+WORKDIR /app
+CMD ["/app/start.sh"]
