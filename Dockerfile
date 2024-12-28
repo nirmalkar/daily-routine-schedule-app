@@ -7,11 +7,8 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./app
 
-# Install frontend dependencies
-RUN npm install
 
 # Copy the rest of the frontend files
 COPY public ./app/public
@@ -28,8 +25,7 @@ FROM python:3.11-slim-bookworm AS final
 # Upgrade pip
 RUN pip install --no-cache-dir --upgrade pip
 # Install backend dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip install --no-cache-dir -r ./app/requirements.txt
 
 
 
