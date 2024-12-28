@@ -3,9 +3,18 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
 import json
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+# Get configuration from environment variables
+FLASK_HOST = os.getenv('FLASK_HOST', '0.0.0.0')
+FLASK_PORT = int(os.getenv('FLASK_PORT', 5000))
 
 # SQLite configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///daily_routine.db'
@@ -92,4 +101,4 @@ def save_daily_data(date):
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True,  host='0.0.0.0')
+    app.run(host=FLASK_HOST, port=FLASK_PORT, debug=True)

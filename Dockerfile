@@ -7,6 +7,7 @@ COPY package*.json ./
 COPY public/ ./public/
 COPY src/ ./src/
 COPY tailwind.config.js ./
+COPY .env ./
 
 # Install dependencies and build frontend
 RUN npm install
@@ -30,8 +31,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Create instance directory for SQLite database
 RUN mkdir -p instance && chown -R root:root instance && chmod 777 instance
 
-# Copy backend files
+# Copy backend files and environment variables
 COPY app.py .
+COPY .env .
 COPY instance/ ./instance/
 
 # Copy all frontend files (needed for react-scripts start)
@@ -40,23 +42,14 @@ COPY --from=frontend-builder /app/package*.json ./
 COPY --from=frontend-builder /app/public/ ./public/
 COPY --from=frontend-builder /app/src/ ./src/
 COPY --from=frontend-builder /app/tailwind.config.js ./
+COPY --from=frontend-builder /app/.env ./
 
-# Environment variables
-ENV FLASK_APP=app.py
-ENV FLASK_ENV=production
-ENV PORT=3000
-ENV REACT_APP_BACKEND_URL=http://localhost:5000
-ENV WDS_SOCKET_PORT=0
-
-# Expose both frontend and backend ports
-EXPOSE 3000
-EXPOSE 5000
-
-# Create startup script with proper working directory
+# Create startup script that sources environment variables and starts both services
 RUN echo '#!/bin/bash\n\
+source .env\n\
 cd /app\n\
 python app.py & \
-npm start' > /app/start.sh && \
+PORT=$REACT_PORT npm start' > /app/start.sh && \
 chmod +x /app/start.sh
 
 # Set the working directory and run the start script
