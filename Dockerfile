@@ -20,22 +20,24 @@ COPY tailwind.config.js .app
 COPY requirements.txt ./app
 COPY instance ./app/instance
 
-# Build the frontend
-RUN npm run build
 
 # Stage 2: Build the Python backend and combine with the frontend
 FROM python:3.11-slim-bookworm AS final
 
 
-
+# Upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 # Install backend dependencies
-RUN pip install --no-cache-dir -r ./app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 
 
 
 # Install Node.js
 RUN apt-get update && apt-get install -y nodejs npm
+
+# Build the frontend
+RUN npm run build
 
 
 # Expose the backend port
