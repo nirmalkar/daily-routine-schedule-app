@@ -46,4 +46,4 @@ COPY --from=frontend-builder /app/package*.json ./
 EXPOSE 5000
 
 # Set the entrypoint to run both the frontend and backend
-CMD ["sh", "-c", "cd src && npm start & cd .. && python app.py"]
+CMD ["sh", "-c", "cd src && npm start & python /app/app.py"]
