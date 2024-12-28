@@ -2,6 +2,8 @@
 
 This application helps you manage your daily routines, todos, and memos. It consists of a React frontend and a Python backend.
 
+![ToDo App](https://github.com/com2u/daily-routine-schedule-app/blob/main/src/App.css)
+
 ## Usage
 
 The application provides a user-friendly interface to manage your daily schedule. Here's a breakdown of the main sections:
