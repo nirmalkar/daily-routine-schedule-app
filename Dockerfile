@@ -35,11 +35,11 @@ COPY instance ./instance
 # Copy the built frontend from the frontend-builder stage
 COPY --from=frontend-builder /app/build ./public
 
-# Install serve to serve the frontend
-RUN pip install serve
+# Install Node.js
+RUN apt-get update && apt-get install -y nodejs npm
 
 # Expose the backend port
 EXPOSE 5000
 
 # Set the entrypoint to run both the frontend and backend
-CMD ["sh", "-c", "serve -s public & python app.py"]
+CMD ["sh", "-c", "npm start & python app.py"]
