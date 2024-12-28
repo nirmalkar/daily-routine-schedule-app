@@ -35,8 +35,11 @@ COPY instance ./instance
 # Copy the built frontend from the frontend-builder stage
 COPY --from=frontend-builder /app/build ./public
 
+# Install serve to serve the frontend
+RUN pip install serve
+
 # Expose the backend port
 EXPOSE 5000
 
 # Set the entrypoint to run both the frontend and backend
-CMD ["python", "app.py"]
+CMD ["sh", "-c", "serve -s public & python app.py"]
