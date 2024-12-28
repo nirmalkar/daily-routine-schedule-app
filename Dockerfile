@@ -38,8 +38,12 @@ COPY --from=frontend-builder /app/build ./public
 # Install Node.js
 RUN apt-get update && apt-get install -y nodejs npm
 
+# Copy the frontend source files and package files
+COPY --from=frontend-builder /app/src ./src
+COPY --from=frontend-builder /app/package*.json ./
+
 # Expose the backend port
 EXPOSE 5000
 
 # Set the entrypoint to run both the frontend and backend
-CMD ["sh", "-c", "npm start & python app.py"]
+CMD ["sh", "-c", "cd src && npm start & cd .. && python app.py"]
