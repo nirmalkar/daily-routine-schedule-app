@@ -8,9 +8,7 @@ WORKDIR /app
 COPY . /app
 
 COPY package*.json ./app
-
-
-# Copy the rest of the frontend files
+COPY app.py ./app
 COPY public /app/public
 COPY src /app/src
 COPY tailwind.config.js /app
@@ -21,6 +19,7 @@ COPY instance /app/instance
 # Stage 2: Build the Python backend and combine with the frontend
 FROM python:3.11-slim-bookworm AS final
 
+RUN ls -la *
 
 # Upgrade pip
 RUN pip install --no-cache-dir --upgrade pip
