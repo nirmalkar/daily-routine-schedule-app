@@ -62,8 +62,8 @@ const DailyRoutine = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 w-full">
-            <div className="w-full bg-white rounded-lg shadow-lg p-6">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-700 p-4 w-full">
+            <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                 <DateNavigation currentDate={currentDate} setCurrentDate={setCurrentDate} />
                 <div className="flex">
                     {/* ... (Sections and Splitters - no changes here) */}

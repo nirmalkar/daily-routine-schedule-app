@@ -18,7 +18,7 @@ const MemoSection = ({ memo, setMemo }) => {
             <textarea
                 value={localMemo} // Use local state for the textarea value
                 onChange={handleChange}
-                className="w-full h-96 p-2 border rounded"
+                className="w-full h-96 p-2 border rounded dark:bg-gray-700 dark:text-white"
                 placeholder="Write your notes here..."
             />
         </div>
