@@ -34,7 +34,6 @@ RUN mkdir -p instance && chown -R root:root instance && chmod 777 instance
 # Copy backend files and environment variables
 COPY app.py .
 COPY .env .
-COPY instance/ ./instance/
 
 # Copy all frontend files (needed for react-scripts start)
 COPY --from=frontend-builder /app/node_modules/ ./node_modules/
