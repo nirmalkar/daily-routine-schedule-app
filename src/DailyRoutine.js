@@ -68,7 +68,13 @@ const DailyRoutine = () => {
                 <div className="flex">
                     {/* ... (Sections and Splitters - no changes here) */}
                     <div style={{ flex: colSizes.todo }}>
-                        <TodoSection todoText={todoText} setTodoText={setTodoText} todos={todos} setTodos={setTodos} />
+                        <TodoSection 
+                            todoText={todoText} 
+                            setTodoText={setTodoText} 
+                            todos={todos} 
+                            setTodos={setTodos} 
+                            currentDate={currentDate}
+                        />
                     </div>
                     <Splitter onResize={(diff) => handleResize('todo', Math.max(1, Math.min(6, colSizes.todo + diff)), 'schedule')} />
                     <div style={{ flex: colSizes.schedule }}>

@@ -1,6 +1,7 @@
 import React from 'react';
+import { fetchDailyData, saveDailyData } from './api';
 
-const TodoSection = ({ todoText, setTodoText, todos, setTodos }) => {
+const TodoSection = ({ todoText, setTodoText, todos, setTodos, currentDate }) => {
 
   const handleTodoChange = (e) => {
     const newText = e.target.value;
@@ -31,6 +32,29 @@ const TodoSection = ({ todoText, setTodoText, todos, setTodos }) => {
         i === index ? { ...todo, done: !todo.done } : todo
       )
     );
+  };
+
+  const handleCopyUncheckedTodos = async () => {
+    const nextDay = new Date(currentDate);
+    nextDay.setDate(currentDate.getDate() + 1);
+    const nextDayStr = nextDay.toISOString().split('T')[0];
+
+    try {
+      const nextDayData = await fetchDailyData(nextDayStr);
+      const nextDayTodos = nextDayData?.todos || [];
+
+      const uncheckedTodos = todos.filter(todo => !todo.done);
+      const mergedTodos = [...nextDayTodos, ...uncheckedTodos];
+
+      await saveDailyData(nextDayStr, { ...nextDayData, todos: mergedTodos });
+
+      // Update the current day's todos to reflect the changes
+      setTodos(prevTodos => prevTodos.map(todo => ({ ...todo, done: false })));
+      setTodoText(prevText => prevText.split('\n').map(line => line.trim()).join('\n'));
+
+    } catch (error) {
+      console.error("Error copying todos:", error);
+    }
   };
 
   return (
@@ -67,6 +91,14 @@ const TodoSection = ({ todoText, setTodoText, todos, setTodos }) => {
           ))}
         </div>
       </div>
+      <button 
+        onClick={handleCopyUncheckedTodos} 
+        className="hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded mt-2"
+        title="Copy unchecked todos to the next day"
+        style={{background: 'transparent'}}
+      >
+        &rarr;
+      </button>
     </div>
   );
 };
