@@ -1,21 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const RoutinesSection = ({ routines, setRoutines }) => {
-    const initialRoutines = [
-        { name: 'Shower', done: false },
-        { name: 'Eat', done: false },
-        { name: 'Sleep', 'done': false },
-        { name: 'Work', 'done': false },
-        { name: 'Sport', 'done': false },
-        { name: 'Drink Water', 'done': false },
-        { name: 'Medication', 'done': false }
-    ];
-
-    useEffect(() => {
-        if (routines.length === 0) {
-            setRoutines(initialRoutines)
-        }
-    }, [])
 
     const toggleRoutine = (index) => {
         setRoutines(prevRoutines => {

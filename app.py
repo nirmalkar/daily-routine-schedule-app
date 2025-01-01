@@ -100,5 +100,23 @@ def save_daily_data(date):
         print(f"Error saving data for {date}: {str(e)}") # Print error on exception
         return jsonify({'error': str(e)}), 400
 
+@app.route('/api/daily-data/<date>', methods=['DELETE'])
+def delete_daily_data(date):
+    try:
+        date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+        daily_data = DailyData.query.filter_by(date=date_obj).first()
+
+        if daily_data:
+            db.session.delete(daily_data)
+            db.session.commit()
+            print(f"Deleted data for {date}")
+            return jsonify({'message': 'Data deleted successfully'})
+        else:
+            print(f"No data found for {date} to delete")
+            return jsonify({'message': 'No data found for this date'})
+    except Exception as e:
+        print(f"Error deleting data for {date}: {str(e)}")
+        return jsonify({'error': str(e)}), 400
+
 if __name__ == '__main__':
     app.run(host=FLASK_HOST, port=FLASK_PORT, debug=True)
