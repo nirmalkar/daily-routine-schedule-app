@@ -59,7 +59,7 @@ const DailyRoutine = () => {
         };
 
         loadData();
-    }, [currentDate]);
+    }, [currentDate, initialRoutines]);
 
     useEffect(() => {
         const saveData = async () => {

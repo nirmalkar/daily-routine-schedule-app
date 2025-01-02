@@ -115,8 +115,11 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
     };
 
     const deleteTimebox = (id) => {
-        setTimeboxes(boxes => boxes.filter(box => box.id!== id));
-        setSchedule(boxes => boxes.filter(box => box.id!== id));
+        setTimeboxes(boxes => {
+            const filteredBoxes = boxes.filter(box => box.id !== id);
+            setSchedule(filteredBoxes);
+            return filteredBoxes;
+        });
     };
 
     useEffect(() => {
@@ -127,7 +130,11 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
                 setTimeboxes(JSON.parse(JSON.stringify(schedule)));
             }
         }
-    }, [schedule]);
+    }, [schedule, timeboxes]);
+
+    useEffect(() => {
+        setSchedule(timeboxes);
+    }, [timeboxes, setSchedule]);
 
     useEffect(() => {
         if (editingBox) {
@@ -138,10 +145,6 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
             }, 0);
         }
     }, [editingBox]);
-
-    useEffect(() => {
-        setSchedule(timeboxes);
-    }, [timeboxes]);
 
     return (
         <div className="border rounded-lg p-4">

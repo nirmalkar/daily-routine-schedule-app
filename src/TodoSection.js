@@ -23,7 +23,11 @@ const TodoSection = ({ todoText, setTodoText, todos, setTodos, currentDate }) =>
     });
     console.log('newTodos:', newTodos);
     console.log('todos:', todos);
-    setTodos(newTodos);
+    if (newTodos.length === 0) {
+        setTodos([]);
+    } else {
+        setTodos(newTodos);
+    }
   };
 
   const toggleTodo = (index) => {
