@@ -17,7 +17,7 @@ FLASK_HOST = os.getenv('FLASK_HOST', '0.0.0.0')
 FLASK_PORT = int(os.getenv('FLASK_PORT', 5000))
 
 # SQLite configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////instance/daily_routine.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///daily_routine.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -41,6 +41,8 @@ class DailyData(db.Model):
 
 # Create database tables
 with app.app_context():
+    if not os.path.exists('/instance'):
+        os.makedirs('/instance')
     db.create_all()
 
 @app.route('/api/daily-data/<date>', methods=['GET'])
