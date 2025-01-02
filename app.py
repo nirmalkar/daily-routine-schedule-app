@@ -59,13 +59,25 @@ def get_daily_data(date):
                 'todos': [],
                 'schedule': [],
                 'routines': [
-                    {'name': 'Shower', 'done': False},
-                    {'name': 'Eat', 'done': False},
-                    {'name': 'Sleep', 'done': False},
-                    {'name': 'Work', 'done': False},
-                    {'name': 'Sport', 'done': False},
-                    {'name': 'Drink Water', 'done': False},
-                    {'name': 'Medication', 'done': False}
+                  
+                    { 'name': 'Become ready', 'done': False },
+                    { 'name': 'Drink Water', 'done': False },
+                    { 'name': 'Medication AM', 'done': False },
+                    { 'name': 'Medication PM', 'done': False },
+                    { 'name': 'Vinegar AM', 'done': False },
+                    { 'name': 'Vinegar PM', 'done': False },
+                    { 'name': 'Sport 1', 'done': False },
+                    { 'name': 'Sport 2', 'done': False },
+                    { 'name': 'Sport 3', 'done': False },
+                    { 'name': 'Cleanup 1', 'done': False },
+                    { 'name': 'Cleanup 2', 'done': False },
+                    { 'name': 'Cleanup 3', 'done': False },
+                    { 'name': 'Eat healthy', 'done': False },
+                    { 'name': 'Walk', 'done': False },
+                    { 'name': 'Be outside', 'done': False },
+                    { 'name': 'Improve project', 'done': False },
+                    { 'name': 'Commit', 'done': False }
+                    
                 ],
                 'memo': ''
             }
