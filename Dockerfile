@@ -53,4 +53,5 @@ chmod +x /app/start.sh
 
 # Set the working directory and run the start script
 WORKDIR /app
+VOLUME /app/instance
 CMD ["/app/start.sh"]
