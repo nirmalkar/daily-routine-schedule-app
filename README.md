@@ -9,16 +9,33 @@ This application helps you manage your daily routines, todos, and memos. It cons
 The application provides a user-friendly interface to manage your daily schedule. Here's a breakdown of the main sections:
 
 ### Daily Routine
-This section allows you to view and manage your daily routines. You can add, edit, and delete routines.
+This section allows you to view and manage your daily routines. You can add, edit, and delete routines. The application automatically saves your data per day.
 
 ### To-Do
-This section allows you to manage your to-do list. You can add, edit, and delete tasks.
+This section allows you to manage your to-do list. You can add, edit, and delete tasks. You can also copy unselected todos to the next day using the arrow button.
 
 ### Memos
-This section allows you to create and manage memos. You can add, edit, and delete memos.
+This section allows you to create and manage memos. It also includes a timer that restarts automatically after 20 minutes.
 
 ### Date Navigation
-Use the date navigation to view your schedule for different days.
+Use the date navigation to view your schedule for different days. Double click on the date to switch to the current date.
+
+The application also supports a Dark/Light mode.
+
+The application can be personalized using the `settings.json` file.
+
+## Architecture
+
+The application consists of the following components:
+
+- A Flask application (`app.py`) as the backend for the database, running on port 5000.
+- A Node.js application for the frontend, running on port 3000.
+
+The application is deployed via Docker.
+
+The port and database configuration are located in the `.env` file.
+
+The database, `settings.json`, and `.env` files are mounted for the docker container.
 
 ## Technologies
 

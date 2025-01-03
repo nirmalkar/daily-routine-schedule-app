@@ -49,6 +49,15 @@ with app.app_context():
     db.create_all()
     print(f"Database created at: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
+def load_settings():
+    try:
+        with open('settings.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+settings = load_settings()
+
 @app.route('/api/daily-data/<date>', methods=['GET'])
 def get_daily_data(date):
     try:
@@ -66,27 +75,7 @@ def get_daily_data(date):
                 'date': date,
                 'todos': [],
                 'schedule': [],
-                'routines': [
-                  
-                    { 'name': 'Become ready', 'done': False },
-                    { 'name': 'Drink Water', 'done': False },
-                    { 'name': 'Medication AM', 'done': False },
-                    { 'name': 'Medication PM', 'done': False },
-                    { 'name': 'Vinegar AM', 'done': False },
-                    { 'name': 'Vinegar PM', 'done': False },
-                    { 'name': 'Sport 1', 'done': False },
-                    { 'name': 'Sport 2', 'done': False },
-                    { 'name': 'Sport 3', 'done': False },
-                    { 'name': 'Cleanup 1', 'done': False },
-                    { 'name': 'Cleanup 2', 'done': False },
-                    { 'name': 'Cleanup 3', 'done': False },
-                    { 'name': 'Eat healthy', 'done': False },
-                    { 'name': 'Walk', 'done': False },
-                    { 'name': 'Be outside', 'done': False },
-                    { 'name': 'Improve project', 'done': False },
-                    { 'name': 'Commit', 'done': False }
-                    
-                ],
+                'routines': settings.get('routines', []),
                 'memo': ''
             }
             print(f"No data found for {date}. Returning default data: {default_data}")

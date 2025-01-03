@@ -6,26 +6,7 @@ import RoutinesSection from './RoutinesSection';
 import MemoSection from './MemoSection';
 import Splitter from './Splitter';
 import DateNavigation from './DateNavigation';
-
-const initialRoutines = [
-    { name: 'Become ready', done: false },
-    { name: 'Drink Water', 'done': false },
-    { name: 'Medication AM', 'done': false },
-    { name: 'Medication PM', 'done': false },
-    { name: 'Vinegar AM', 'done': false },
-    { name: 'Vinegar PM', 'done': false },
-    { name: 'Sport 1', 'done': false },
-    { name: 'Sport 2', 'done': false },
-    { name: 'Sport 3', 'done': false },
-    { name: 'Cleanup 1', 'done': false },
-    { name: 'Cleanup 2', 'done': false },
-    { name: 'Cleanup 3', 'done': false },
-    { name: 'Eat healthy', done: false },
-    { name: 'Walk', done: false },
-    { name: 'Be outside', done: false },
-    { name: 'Improve project', 'done': false },
-    { name: 'Commit', 'done': false }
-];
+import settings from './settings.json';
 
 const DailyRoutine = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -50,7 +31,7 @@ const DailyRoutine = () => {
                     setTodoText(data.todos?.map(todo => todo.text).join('\n') || '');
                     setTodos(data.todos || []);
                     setSchedule(data.schedule || []);
-                    setRoutines(data.routines || (data.routines === undefined ? initialRoutines : []));
+                    setRoutines(data.routines || (data.routines === undefined ? settings.routines : []));
                     setMemo(data.memo || '');
                     console.log('useEffect in DailyRoutine.js data set for ', currentDate); // Added console log
                 }

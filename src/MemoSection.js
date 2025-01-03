@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import settings from './settings.json';
 
 const MemoSection = ({ memo, setMemo }) => {
     const [timerRunning, setTimerRunning] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(20 * 60); // 20 minutes in seconds
+    const [timeLeft, setTimeLeft] = useState(settings.timer * 60); // timer from settings in seconds
     const audioRef = useRef(null);
 
     useEffect(() => {
@@ -16,7 +17,7 @@ const MemoSection = ({ memo, setMemo }) => {
             if (audioRef.current) {
                 audioRef.current.play();
             }
-            setTimeLeft(20 * 60); // Reset timer
+            setTimeLeft(settings.timer * 60); // Reset timer
         }
         return () => clearInterval(intervalId);
     }, [timerRunning, timeLeft]);
