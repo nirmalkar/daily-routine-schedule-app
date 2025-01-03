@@ -41,6 +41,11 @@ class DailyData(db.Model):
 
 # Create database tables
 with app.app_context():
+    db_path = app.config['SQLALCHEMY_DATABASE_URI'].replace('sqlite:///', '')
+    if os.path.exists(db_path):
+        print(f"Database file already exists at: {db_path}")
+    else:
+        print(f"Creating database at: {db_path}")
     db.create_all()
     print(f"Database created at: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
@@ -101,13 +106,19 @@ def save_daily_data(date):
         print(f"Saving data for {date}: {data}") # Print when saving data
 
         daily_data = DailyData.query.filter_by(date=date_obj).first()
-        if not daily_data:
-            daily_data = DailyData(date=date_obj)
-
-        daily_data.todos = json.dumps(data.get('todos', []))
-        daily_data.schedule = json.dumps(data.get('schedule', []))
-        daily_data.routines = json.dumps(data.get('routines', []))
-        daily_data.memo = data.get('memo', '')
+        if daily_data:
+            daily_data.todos = json.dumps(data.get('todos', []))
+            daily_data.schedule = json.dumps(data.get('schedule', []))
+            daily_data.routines = json.dumps(data.get('routines', []))
+            daily_data.memo = data.get('memo', '')
+        else:
+            daily_data = DailyData(
+                date=date_obj,
+                todos=json.dumps(data.get('todos', [])),
+                schedule=json.dumps(data.get('schedule', [])),
+                routines=json.dumps(data.get('routines', [])),
+                memo=data.get('memo', '')
+            )
 
         db.session.add(daily_data)
         db.session.commit()

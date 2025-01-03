@@ -1,6 +1,7 @@
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 export const fetchDailyData = async (date) => {
+    console.log('fetchDailyData called for date:', date); // Added console log
     try {
         const response = await fetch(`${API_BASE_URL}/api/daily-data/${date}`);
         if (!response.ok) {
@@ -10,6 +11,7 @@ export const fetchDailyData = async (date) => {
         return await response.json();
     } catch (error) {
         console.error('Error fetching daily data:', error);
+        console.log('Data fetch failed or corrupted:', error); // Added console log
         throw error; // Re-throw the error for the component to handle
     }
 };

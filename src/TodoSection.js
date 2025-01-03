@@ -39,6 +39,7 @@ const TodoSection = ({ todoText, setTodoText, todos, setTodos, currentDate }) =>
   };
 
   const handleCopyUncheckedTodos = async () => {
+    console.log('handleCopyUncheckedTodos called'); // Added console log
     const nextDay = new Date(currentDate);
     nextDay.setDate(currentDate.getDate() + 1);
     const nextDayStr = nextDay.toISOString().split('T')[0];
