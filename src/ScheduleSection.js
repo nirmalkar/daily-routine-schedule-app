@@ -130,7 +130,7 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
                 setTimeboxes(JSON.parse(JSON.stringify(schedule)));
             }
         }
-    }, [schedule, timeboxes]);
+    }, [schedule]);
 
     useEffect(() => {
         setSchedule(timeboxes);
