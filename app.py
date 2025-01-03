@@ -17,7 +17,7 @@ FLASK_HOST = os.getenv('FLASK_HOST', '0.0.0.0')
 FLASK_PORT = int(os.getenv('FLASK_PORT', 5000))
 
 # SQLite configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////instance/daily_routine.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -42,6 +42,7 @@ class DailyData(db.Model):
 # Create database tables
 with app.app_context():
     db.create_all()
+    print(f"Database created at: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
 @app.route('/api/daily-data/<date>', methods=['GET'])
 def get_daily_data(date):
@@ -52,7 +53,9 @@ def get_daily_data(date):
         if daily_data:
             data_dict = daily_data.to_dict()
             print(f"Loading data for {date}: {data_dict}") # Print when loading data
-            return jsonify(data_dict)
+            response = jsonify(data_dict)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
         else:
             default_data = {
                 'date': date,
@@ -82,7 +85,9 @@ def get_daily_data(date):
                 'memo': ''
             }
             print(f"No data found for {date}. Returning default data: {default_data}")
-            return jsonify(default_data)
+            response = jsonify(default_data)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
     except Exception as e:
         print(f"Error loading data for {date}: {str(e)}") # Print error on exception
         return jsonify({'error': str(e)}), 400
@@ -107,7 +112,9 @@ def save_daily_data(date):
         db.session.add(daily_data)
         db.session.commit()
 
-        return jsonify({'message': 'Data saved successfully'})
+        response = jsonify({'message': 'Data saved successfully'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
     except Exception as e:
         print(f"Error saving data for {date}: {str(e)}") # Print error on exception
         return jsonify({'error': str(e)}), 400
@@ -122,10 +129,14 @@ def delete_daily_data(date):
             db.session.delete(daily_data)
             db.session.commit()
             print(f"Deleted data for {date}")
-            return jsonify({'message': 'Data deleted successfully'})
+            response = jsonify({'message': 'Data deleted successfully'})
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
         else:
             print(f"No data found for {date} to delete")
-            return jsonify({'message': 'No data found for this date'})
+            response = jsonify({'message': 'No data found for this date'})
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
     except Exception as e:
         print(f"Error deleting data for {date}: {str(e)}")
         return jsonify({'error': str(e)}), 400
