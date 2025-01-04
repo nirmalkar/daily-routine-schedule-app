@@ -111,3 +111,135 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Application Specification
+
+## Overview
+
+This application is a daily routine management tool that allows users to manage their todos, schedule, routines, and memos. It also includes a timer in the memo section. The application uses a backend API to store and retrieve data.
+
+## Features
+
+### Theme Management
+- The application supports light and dark themes.
+- The initial theme is set based on the user's system preferences.
+- Users can toggle between light and dark themes using a button.
+
+### Date Navigation
+- Users can navigate between days using previous and next day buttons.
+- Users can jump to the current day by double-clicking the date.
+
+### Todo Section
+- Users can add todos by typing them into a text area.
+- Each todo is displayed with a checkbox that can be used to mark it as done.
+- Users can copy unchecked todos to the next day.
+
+### Schedule Section
+- Users can create and manage timeboxes in a schedule grid.
+- Timeboxes can be dragged and resized.
+- Users can edit the text of a timebox.
+- Users can delete timeboxes.
+
+### Routines Section
+- Users can toggle the completion status of routines.
+- Routines are displayed as a list with checkboxes.
+
+### Memo Section
+- Users can write memos in a text area.
+- A timer is included in the memo section.
+- The timer can be started and paused.
+- The timer plays a sound when it reaches zero.
+
+### Data Storage
+- The application uses a backend API to store and retrieve data.
+- The API base URL is determined by the `REACT_APP_BACKEND_URL` environment variable or defaults to `http://localhost:5000`.
+- The API provides endpoints for fetching and saving daily data.
+
+### Layout
+- The application uses a flexible layout with resizable columns.
+- The layout is divided into four sections: Todo, Schedule, Routines, and Memo.
+- Users can resize the columns using splitters.
+
+## File Structure
+
+### src/api.js
+- Defines functions for fetching and saving daily data from the backend API.
+
+### src/App.js
+- The main component of the React application.
+- Manages the application's theme and renders the `DailyRoutine` component.
+
+### src/DailyRoutine.js
+- The core component of the application.
+- Manages the daily routine data and renders the different sections.
+- Fetches and saves data using the `api.js` functions.
+- Manages the column sizes for the different sections using the `Splitter` component.
+
+### src/TodoSection.js
+- Renders the todo list section.
+- Allows users to add todos, mark them as done, and copy unchecked todos to the next day.
+
+### src/ScheduleSection.js
+- Renders the schedule section.
+- Allows users to create and manage timeboxes.
+
+### src/RoutinesSection.js
+- Renders the routines section.
+- Allows users to toggle the completion status of routines.
+
+### src/MemoSection.js
+- Renders the memo section.
+- Allows users to write memos and use a timer.
+
+### src/DateNavigation.js
+- Renders the date navigation section.
+- Allows users to navigate between days.
+
+### src/Splitter.js
+- Renders a vertical splitter that allows users to resize the columns in the layout.
+
+### src/index.js
+- The entry point of the React application.
+- Renders the `App` component into the root element of the HTML page.
+
+### src/App.css
+- Contains the CSS styles for the `App` component.
+
+### src/index.css
+- Contains the global CSS styles for the application.
+
+### src/settings.json
+- Contains the default routines and the timer duration for the memo section.
+
+## Data Models
+
+### Todo
+- `text`: string
+- `done`: boolean
+
+### Timebox
+- `id`: number
+- `text`: string
+- `startTime`: number
+- `duration`: number
+
+### Routine
+- `name`: string
+- `done`: boolean
+
+## Dependencies
+- React
+- lucide-react
+- tailwindcss
+
+## Backend API
+
+- The backend API should provide the following endpoints:
+    - `GET /api/daily-data/:date`: Fetches daily data for a specific date.
+    - `POST /api/daily-data/:date`: Saves daily data for a specific date.
+
+## Settings
+
+- The `src/settings.json` file contains the following settings:
+    - `routines`: An array of routine objects with `name` and `done` properties.
+    - `timer`: The timer duration in minutes.
