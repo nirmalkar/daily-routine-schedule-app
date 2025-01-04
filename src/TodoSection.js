@@ -54,7 +54,7 @@ const TodoSection = ({ todoText, setTodoText, todos, setTodos, currentDate }) =>
       await saveDailyData(nextDayStr, { ...nextDayData, todos: mergedTodos });
 
       // Update the current day's todos to reflect the changes
-      setTodos(prevTodos => prevTodos.map(todo => ({ ...todo, done: false })));
+      // setTodos(prevTodos => prevTodos.map(todo => ({ ...todo, done: false })));
       setTodoText(prevText => prevText.split('\n').map(line => line.trim()).join('\n'));
 
     } catch (error) {
