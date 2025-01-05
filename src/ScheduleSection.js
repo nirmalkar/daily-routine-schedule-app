@@ -7,6 +7,7 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
     const [resizing, setResizing] = useState(null);
     const [editingBox, setEditingBox] = useState(null);
     const inputRef = useRef(null);
+    const prevScheduleRef = useRef(null);
 
     const timeSlots = Array.from({ length: 19 }, (_, i) => i + 6);
 
@@ -59,10 +60,12 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
     };
 
     const handleMouseUp = () => {
-      setDraggedBox(null);
-      setResizing(null);
-      setSchedule(timeboxes); // Crucial: Update parent state
-  };
+        if (draggedBox || resizing) {
+            setDraggedBox(null);
+            setResizing(null);
+            setSchedule(timeboxes); // Only update parent state when drag/resize is complete
+        }
+    };
 
     const startResize = (e, box) => {
         e.stopPropagation();
@@ -101,40 +104,42 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
             duration: 1
         };
 
-        setTimeboxes([...timeboxes, newBox]);
+        const newTimeboxes = [...timeboxes, newBox];
+        setTimeboxes(newTimeboxes);
         setEditingBox(newBox.id);
+        setSchedule(newTimeboxes); // Update parent state when new box is created
     };
 
-
     const updateBoxText = (id, newText) => {
-        setTimeboxes(boxes =>
-            boxes.map(box =>
-                box.id === id ? { ...box, text: newText } : box
-            )
+        const newTimeboxes = timeboxes.map(box =>
+            box.id === id ? { ...box, text: newText } : box
         );
+        setTimeboxes(newTimeboxes);
+    };
+
+    const handleInputKeyDown = (e, id) => {
+        if (e.key === 'Enter') {
+            setEditingBox(null);
+            setSchedule(timeboxes); // Update parent state when text input is complete
+        }
     };
 
     const deleteTimebox = (id) => {
-        setTimeboxes(boxes => {
-            const filteredBoxes = boxes.filter(box => box.id !== id);
-            setSchedule(filteredBoxes);
-            return filteredBoxes;
-        });
+        const newTimeboxes = timeboxes.filter(box => box.id !== id);
+        setTimeboxes(newTimeboxes);
+        setSchedule(newTimeboxes); // Update parent state when box is deleted
     };
 
     useEffect(() => {
         if (schedule) {
-            const prevSchedule = JSON.stringify(timeboxes);
             const nextSchedule = JSON.stringify(schedule);
+            const prevSchedule = prevScheduleRef.current;
             if (prevSchedule !== nextSchedule) {
                 setTimeboxes(JSON.parse(JSON.stringify(schedule)));
+                prevScheduleRef.current = nextSchedule;
             }
         }
-    }, [schedule, timeboxes]);
-
-    useEffect(() => {
-        setSchedule(timeboxes);
-    }, [timeboxes, setSchedule]);
+    }, [schedule]); // Only depend on schedule prop changes
 
     useEffect(() => {
         if (editingBox) {
@@ -199,7 +204,7 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
                                     type="text"
                                     value={box.text}
                                     onChange={(e) => updateBoxText(box.id, e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && setEditingBox(null)}
+                                    onKeyDown={(e) => handleInputKeyDown(e, box.id)}
                                     className="w-full bg-transparent border-none focus:outline-none"
                                     autoFocus
                                 />
