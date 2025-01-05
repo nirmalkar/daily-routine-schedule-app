@@ -52,8 +52,10 @@ with app.app_context():
 def load_settings():
     try:
         with open('settings.json', 'r') as f:
+            print(f"Load settings.json")
             return json.load(f)
     except FileNotFoundError:
+        print(f"No settings.json found!")
         return {}
 
 settings = load_settings()
@@ -79,6 +81,8 @@ def get_daily_data(date):
                 'memo': ''
             }
             print(f"No data found for {date}. Returning default data: {default_data}")
+            
+
             response = jsonify(default_data)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response

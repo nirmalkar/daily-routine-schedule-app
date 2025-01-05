@@ -68,3 +68,22 @@
   background-color: transparent !important;
   color: #fff;
 }
+
+@media (max-width: 768px) {
+  .flex {
+    flex-direction: column;
+  }
+  .routine-item {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+  .routine-item input[type="checkbox"] {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .routine-item span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}

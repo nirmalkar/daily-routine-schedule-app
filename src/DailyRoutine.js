@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { fetchDailyData, saveDailyData } from './api';
 import TodoSection from './TodoSection';
 import ScheduleSection from './ScheduleSection';
@@ -17,6 +17,7 @@ const DailyRoutine = () => {
     const [routines, setRoutines] = useState([]);
     const [memo, setMemo] = useState('');
     const [loading, setLoading] = useState(true);
+    const previousDate = useRef(null);
 
 
     useEffect(() => {
@@ -31,10 +32,11 @@ const DailyRoutine = () => {
                     setTodoText(data.todos?.map(todo => todo.text).join('\n') || '');
                     setTodos(data.todos || []);
                     setSchedule(data.schedule || []);
-                    setRoutines(data.routines || (data.routines === undefined ? settings.routines : []));
+                    setRoutines(data.routines && data.routines.length > 0 ? data.routines : settings.routines);
                     setMemo(data.memo || '');
                     console.log('useEffect in DailyRoutine.js data set for ', currentDate); // Added console log
                 }
+                previousDate.current = dateStr;
             } catch (error) {
                 console.error('Error loading data:', error);
             } finally {
@@ -43,7 +45,9 @@ const DailyRoutine = () => {
             }
         };
 
-        loadData();
+        if (previousDate.current === null || previousDate.current !== currentDate.toISOString().split('T')[0]) {
+            loadData();
+        }
     }, [currentDate]);
 
     useEffect(() => {
