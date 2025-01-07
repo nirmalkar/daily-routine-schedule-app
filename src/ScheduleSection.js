@@ -107,7 +107,7 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
         const newTimeboxes = [...timeboxes, newBox];
         setTimeboxes(newTimeboxes);
         setEditingBox(newBox.id);
-        setSchedule(newTimeboxes); // Update parent state when new box is created
+        // Remove setSchedule here since useEffect will handle it
     };
 
     const updateBoxText = (id, newText) => {
@@ -130,6 +130,7 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
         setSchedule(newTimeboxes); // Update parent state when box is deleted
     };
 
+    // Effect to sync with parent schedule changes
     useEffect(() => {
         if (schedule) {
             const nextSchedule = JSON.stringify(schedule);
@@ -139,7 +140,14 @@ const ScheduleSection = ({ schedule, setSchedule }) => {
                 prevScheduleRef.current = nextSchedule;
             }
         }
-    }, [schedule]); // Only depend on schedule prop changes
+    }, [schedule]);
+
+    // Effect to sync local changes to parent
+    useEffect(() => {
+        if (!draggedBox && !resizing && !editingBox) {
+            setSchedule(timeboxes);
+        }
+    }, [timeboxes, draggedBox, resizing, editingBox, setSchedule]);
 
     useEffect(() => {
         if (editingBox) {
