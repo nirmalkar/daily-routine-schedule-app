@@ -4,7 +4,15 @@ from flask_cors import CORS
 from datetime import datetime
 import json
 import os
+import logging
 from dotenv import load_dotenv
+
+# Set up logging
+logging.basicConfig(
+    filename='app.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 # Load environment variables
 load_dotenv()
@@ -43,32 +51,49 @@ class DailyData(db.Model):
 with app.app_context():
     db_path = app.config['SQLALCHEMY_DATABASE_URI'].replace('sqlite:///', '')
     if os.path.exists(db_path):
-        print(f"Database file already exists at: {db_path}")
+        logging.info(f"Database file already exists at: {db_path}")
     else:
-        print(f"Creating database at: {db_path}")
+        logging.info(f"Creating database at: {db_path}")
     db.create_all()
-    print(f"Database created at: {app.config['SQLALCHEMY_DATABASE_URI']}")
+    logging.info(f"Database created at: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
 def load_settings():
     try:
         with open('settings.json', 'r') as f:
-            print(f"Load settings.json")
+            logging.info("Load settings.json")
             return json.load(f)
     except FileNotFoundError:
-        print(f"No settings.json found!")
+        logging.error("No settings.json found!")
         return {}
 
 settings = load_settings()
 
+def validate_date_format(date_str):
+    """Validate that the date string is in the correct format."""
+    try:
+        datetime.strptime(date_str, '%Y-%m-%d')
+        return True, None
+    except ValueError as e:
+        logging.error(f"Invalid date format: {str(e)}")
+        return False, "Invalid date format"
+
 @app.route('/api/daily-data/<date>', methods=['GET'])
 def get_daily_data(date):
     try:
+        # Validate date format
+        is_valid, error_message = validate_date_format(date)
+        if not is_valid:
+            return jsonify({
+                'error': 'Invalid date format',
+                'message': error_message
+            }), 400
+
         date_obj = datetime.strptime(date, '%Y-%m-%d').date()
         daily_data = DailyData.query.filter_by(date=date_obj).first()
 
         if daily_data:
             data_dict = daily_data.to_dict()
-            print(f"Loading data for {date}: {data_dict}") # Print when loading data
+            logging.info(f"Loading data for {date}: {data_dict}")
             response = jsonify(data_dict)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
@@ -80,23 +105,39 @@ def get_daily_data(date):
                 'routines': settings.get('routines', []),
                 'memo': ''
             }
-            print(f"No data found for {date}. Returning default data: {default_data}")
+            logging.info(f"No data found for {date}. Returning default data: {default_data}")
             
-
             response = jsonify(default_data)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
     except Exception as e:
-        print(f"Error loading data for {date}: {str(e)}") # Print error on exception
+        logging.error(f"Error loading data for {date}: {str(e)}")
         return jsonify({'error': str(e)}), 400
 
 @app.route('/api/daily-data/<date>', methods=['POST'])
 def save_daily_data(date):
     try:
+        # Validate date format
+        is_valid, error_message = validate_date_format(date)
+        if not is_valid:
+            return jsonify({
+                'error': 'Invalid date format',
+                'message': error_message
+            }), 400
+
         date_obj = datetime.strptime(date, '%Y-%m-%d').date()
         data = request.get_json()
 
-        print(f"Saving data for {date}: {data}") # Print when saving data
+        # Validate that the data contains the correct date
+        if 'date' in data and data['date'] != date:
+            error_msg = f"Date mismatch: URL date {date} doesn't match data date {data['date']}"
+            logging.error(error_msg)
+            return jsonify({
+                'error': 'Date mismatch',
+                'message': error_msg
+            }), 400
+
+        logging.info(f"Saving data for {date}: {data}")
 
         daily_data = DailyData.query.filter_by(date=date_obj).first()
         if daily_data:
@@ -120,7 +161,7 @@ def save_daily_data(date):
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     except Exception as e:
-        print(f"Error saving data for {date}: {str(e)}") # Print error on exception
+        logging.error(f"Error saving data for {date}: {str(e)}")
         return jsonify({'error': str(e)}), 400
 
 @app.route('/api/daily-data/<date>', methods=['DELETE'])
@@ -132,17 +173,17 @@ def delete_daily_data(date):
         if daily_data:
             db.session.delete(daily_data)
             db.session.commit()
-            print(f"Deleted data for {date}")
+            logging.info(f"Deleted data for {date}")
             response = jsonify({'message': 'Data deleted successfully'})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
         else:
-            print(f"No data found for {date} to delete")
+            logging.info(f"No data found for {date} to delete")
             response = jsonify({'message': 'No data found for this date'})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
     except Exception as e:
-        print(f"Error deleting data for {date}: {str(e)}")
+        logging.error(f"Error deleting data for {date}: {str(e)}")
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
