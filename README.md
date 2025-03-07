@@ -243,3 +243,38 @@ This application is a daily routine management tool that allows users to manage 
 - The `src/settings.json` file contains the following settings:
     - `routines`: An array of routine objects with `name` and `done` properties.
     - `timer`: The timer duration in minutes.
+
+## Folder Structure
+
+```DailyRoutineScheduleApps/backend
+├── app/
+│   ├── __init__.py              # Application factory and blueprint registration
+│   ├── config.py                # Application configuration classes (Dev, Prod, etc.)
+│   ├── extensions.py            # Initialize extensions (e.g., SQLAlchemy, CORS)
+│   ├── models/                  # Database models
+│   │   ├── __init__.py          # Imports all models
+│   │   └── daily_data.py        # DailyData model
+│   ├── routes/                  # API endpoints organized by feature
+│   │   ├── __init__.py          # Blueprint registration for routes
+│   │   └── daily_data.py        # Routes for daily data endpoints
+│   ├── services/                # Business logic and background services
+│   │   ├── __init__.py
+│   │   └── backup_service.py    # Backup logic and scheduled tasks
+│   ├── settings/                # Settings and configuration loaders
+│   │   ├── __init__.py
+│   │   └── settings_loader.py   # Load settings.json and similar files
+│   └── utils/                   # Utility modules (helpers, validations, etc.)
+│       ├── __init__.py
+│       └── date_utils.py        # Date format validation, etc.
+├── migrations/                  # Database migration scripts (if using Flask-Migrate)
+├── tests/                       # Unit and integration tests
+│   ├── __init__.py
+│   └── test_daily_data.py       # Tests for your daily data endpoints and logic
+├── instance/                    # Instance folder for configuration overrides (not in VCS)
+│   └── config.py
+├── logs/                        # Log files
+│   └── app.log
+├── run.py                       # Application entry point to run the server
+├── requirements.txt             # Python dependencies list
+└── settings.json                # Global settings file (e.g., default routines)
+```
