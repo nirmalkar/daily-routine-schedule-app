@@ -6,6 +6,8 @@ import logging
 from datetime import datetime, timedelta
 from app.config import Config
 
+logger = logging.getLogger(__name__)
+
 def get_db_path():
     uri = Config.SQLALCHEMY_DATABASE_URI
     if uri.startswith('sqlite:///'):
@@ -56,8 +58,11 @@ def create_backup():
     if should_backup():
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         backup_path = os.path.join(os.path.dirname(db_path), f"{os.path.basename(db_path)}.backup_{timestamp}")
-        shutil.copy2(db_path, backup_path)
-        logging.info(f"Database backup created: {backup_path}")
+        try:
+            shutil.copy2(db_path, backup_path)
+            logger.info(f"Database backup created: {backup_path}")
+        except Exception as e:
+            logger.error(f"Error creating backup: {e}")
 
 def scheduled_backup():
     while True:

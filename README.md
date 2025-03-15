@@ -274,7 +274,7 @@ This application is a daily routine management tool that allows users to manage 
 │   └── config.py
 ├── logs/                        # Log files
 │   └── app.log
-├── run.py                       # Application entry point to run the server
+├── app.py                       # Application entry point to run the server
 ├── requirements.txt             # Python dependencies list
 └── settings.json                # Global settings file (e.g., default routines)
 ```

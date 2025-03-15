@@ -1,7 +1,6 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime
 import json
-import logging
 
 from app.models.daily_data import DailyData
 from app.extensions import db
@@ -26,7 +25,7 @@ def get_daily_data(date):
 
     if daily_data:
         data_dict = daily_data.to_dict()
-        logging.info(f"Loading data for {date}: {data_dict}")
+        current_app.logger.info(f"Loading data for {date}: {data_dict}")
         response = jsonify(data_dict)
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
@@ -38,7 +37,7 @@ def get_daily_data(date):
             'routines': settings.get('routines', []),
             'memo': ''
         }
-        logging.info(f"No data found for {date}. Returning default data: {default_data}")
+        current_app.logger.info(f"No data found for {date}. Returning default data: {default_data}")
         response = jsonify(default_data)
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
@@ -57,13 +56,13 @@ def save_daily_data(date):
 
     if 'date' in data and data['date'] != date:
         error_msg = f"Date mismatch: URL date {date} doesn't match data date {data['date']}"
-        logging.error(error_msg)
+        current_app.logger.error(error_msg)
         return jsonify({
             'error': 'Date mismatch',
             'message': error_msg
         }), 400
 
-    logging.info(f"Saving data for {date}: {data}")
+    current_app.logger.info(f"Saving data for {date}: {data}")
 
     daily_data = DailyData.query.filter_by(date=date_obj).first()
     if daily_data:
@@ -96,15 +95,15 @@ def delete_daily_data(date):
         if daily_data:
             db.session.delete(daily_data)
             db.session.commit()
-            logging.info(f"Deleted data for {date}")
+            current_app.logger.info(f"Deleted data for {date}")
             response = jsonify({'message': 'Data deleted successfully'})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
         else:
-            logging.info(f"No data found for {date} to delete")
+            current_app.logger.info(f"No data found for {date} to delete")
             response = jsonify({'message': 'No data found for this date'})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
     except Exception as e:
-        logging.error(f"Error deleting data for {date}: {str(e)}")
+        current_app.logger.exception(f"Error deleting data for {date}")
         return jsonify({'error': str(e)}), 400

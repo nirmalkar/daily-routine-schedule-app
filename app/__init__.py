@@ -27,9 +27,9 @@ def setup_logging(app):
 
     logger = app.logger
     logger.setLevel(logging.INFO)
-
-    if logger.handlers:  # Prevent adding handlers repeatedly
-        return
+    
+    if logger.handlers:
+        logger.handlers.clear()
 
     # Create logs directory if it doesn't exist
     log_dir = os.path.join(os.getcwd(), 'logs')
@@ -48,4 +48,5 @@ def setup_logging(app):
     console_formatter = Formatter('%(asctime)s - %(levelname)s - %(message)s')
     console_handler.setFormatter(console_formatter)
     logger.addHandler(console_handler)
+
 
